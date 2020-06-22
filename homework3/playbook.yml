@@ -1,9 +1,7 @@
 ---
 - name: Install and Configure Apache vhost
-  hosts: lamp
+  hosts: node1.example.com
   user: ansible
-
-
 
   tasks:
    - name: install httpd
