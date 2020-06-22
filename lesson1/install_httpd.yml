@@ -1,0 +1,27 @@
+---
+ - name: Install Httpd
+   hosts: node1.example.com
+   user: ansible
+   tasks:
+   - name: install httpd
+     yum: name=httpd state=present
+
+   - name: Start httpd
+     service: name=httpd state=started
+
+   - name: Create index.html
+     copy:
+       content: "Welcome to my web server"
+       dest: /var/www/html/index.html
+
+   - name: Enable port 80
+     firewalld:
+       port: 80/tcp
+       permanent: yes
+       state: enabled
+
+   - name: reload service firewalld
+     systemd:
+       name: firewalld
+       state: reloaded
+...

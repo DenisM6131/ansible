@@ -1,0 +1,49 @@
+---
+ - name: Install vsftpd
+   hosts: node2.example.com
+   vars:
+     anonymous_enable: "YES"
+     write_enable: "YES"
+     anon_upload_enable: "YES"
+     anon_mkdir_write_enable: "YES"
+   user: ansible
+   tasks:
+   - name: Install vsftpd
+     yum: 
+       name: vsftpd
+       state: latest
+
+   - name: Replace vsftpd.conf
+     template:
+       src: vsftpd.conf.j2
+       dest: /etc/vsftpd/vsftpd.conf
+
+   - name: Change directory owner and permissions
+     file:
+       path: /var/ftp/pub
+       owner: ftp
+       mode: 0755
+       setype: public_content_rw_t
+
+   - name: Install semanage-python
+     yum:
+       name: libsemanage-python
+       state: latest
+
+   - name: Set ftpd_anon_write flag on and keep it persistent across reboots
+     seboolean:
+       name: ftpd_anon_write
+       state: yes
+       persistent: yes
+
+   - name: Enable port for ftp
+     firewalld:
+       service: ftp
+       permanent: yes
+       state: enabled
+
+   - name: Reload service firewalld
+     systemd:
+       name: firewalld
+       state: reloaded
+...

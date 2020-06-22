@@ -1,0 +1,16 @@
+---
+ - name: Install MariaDB
+   hosts: all
+   user: ansible
+   tasks:
+   - name: Check file
+     stat: 
+       path: /tmp/database
+     register: f
+
+   - name: install MariaDB
+     yum: 
+       name: mariadb-server
+       state: present
+     when: f.stat.exists
+...

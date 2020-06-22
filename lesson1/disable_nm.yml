@@ -1,0 +1,18 @@
+---
+ - name: Disable NetworkManager
+   hosts: node2.example.com
+   user: ansible
+   vars:
+    new_params: net.ifnames=0 biosdevname=0
+   tasks:
+    - name: Adding new params
+      lineinfile:
+         dest: /etc/default/grub
+         backrefs: yes
+         state: present
+         regexp: '^GRUB_CMDLINE_LINUX=\"(.*(?<!{{ new_params }}))\"'
+         line: 'GRUB_CMDLINE_LINUX="\1 {{ new_params }}"'
+
+    - name: Run grub2-mkconfig
+      command: /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg
+...

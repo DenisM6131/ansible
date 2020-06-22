@@ -1,0 +1,8 @@
+---
+- name: Install and Configure Apache vhost
+  hosts: lamp
+  user: ansible
+
+  roles:
+    - install_vhost
+...

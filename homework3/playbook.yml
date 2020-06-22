@@ -1,0 +1,46 @@
+---
+- name: Install and Configure Apache vhost
+  hosts: lamp
+  user: ansible
+
+
+
+  tasks:
+   - name: install httpd
+     yum:
+       name: httpd
+       state: latest
+
+   - name: Create directory
+     file:
+       path: "{{  vhost_path  }}"
+       mode: 0755
+       recurse: yes
+
+   - name: Generate vhost config file
+     template:
+       src: example.com.conf.j2
+       dest: "{{  conf_path  }}/example.com.conf"
+
+   - name: Create index.html
+     copy:
+       content: "Welcome to my web server {{  ansible_fqdn  }}  "
+       dest: "{{  vhost_path  }}/index.html"
+
+   - name: Start httpd
+     service:
+       name: httpd
+       state: started
+       enabled: yes
+
+   - name: Enable port 80
+     firewalld:
+       port: 80/tcp
+       permanent: yes
+       state: enabled
+
+   - name: reload service firewalld
+     systemd:
+       name: firewalld
+       state: reloaded
+...

@@ -1,0 +1,10 @@
+---
+ - name: Uninstall vsftpd
+   hosts: node2.example.com
+   user: ansible
+   tasks:
+   - name: Uninstal vsftpd
+     yum: 
+       name: vsftpd
+       state: absent
+...

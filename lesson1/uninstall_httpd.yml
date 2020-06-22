@@ -1,0 +1,26 @@
+---
+ - name: Uninstall Httpd
+   hosts: all
+   user: ansible
+   tasks:
+   - name: Delete index.html
+     file:
+       path: /var/www/html/index.html
+       state: absent
+
+   - name: uninstall httpd
+     yum: 
+       name=httpd
+       state=absent
+
+   - name: Disable port 80
+     firewalld:
+       port: 80/tcp
+       permanent: yes
+       state: disabled
+
+   - name: reload service firewalld
+     systemd:
+       name: firewalld
+       state: reloaded
+...

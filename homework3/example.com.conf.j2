@@ -1,0 +1,5 @@
+<VirtualHost {{  ansible_default_ipv4.address  }}:80>
+    ServerName {{  ansible_fqdn  }}
+    ServerAlias {{  ansible_hostname  }}
+    DocumentRoot /var/www/{{  ansible_domain  }}/public_html
+</VirtualHost>
